@@ -1,24 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer()
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner()
-          ),
-        ]
-      : []),
-  ],
+  // GitHub Pages project repo
+  base: "/Pacific-Host-Hospitality/",
+
+  plugins: [react()],
+
+  // SOURCE
+  root: path.resolve(__dirname, "client"),
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client/src"),
@@ -26,15 +18,10 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "attached_assets"),
     },
   },
-  root: path.resolve(__dirname, "client"), // <- folder where index.html lives
+
+  // OUTPUT
   build: {
-    outDir: path.resolve(__dirname, "docs"), // <- output folder for GitHub Pages
+    outDir: path.resolve(__dirname, "docs"),
     emptyOutDir: true,
-  },
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
   },
 });
